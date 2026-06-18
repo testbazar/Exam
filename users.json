@@ -1,0 +1,44 @@
+{
+  "users": [
+    {
+      "username": "rahul123",
+      "password": "Rahul@123"
+    },
+    {
+      "username": "sumi2025",
+      "password": "Sumi#2025"
+    },
+    {
+      "username": "arif786",
+      "password": "Arif@786"
+    },
+    {
+      "username": "mita001",
+      "password": "Mita!001"
+    },
+    {
+      "username": "rony77",
+      "password": "Rony@77"
+    },
+    {
+      "username": "tania88",
+      "password": "Tania#88"
+    },
+    {
+      "username": "joy2024",
+      "password": "Joy@2024"
+    },
+    {
+      "username": "nila55",
+      "password": "Nila!55"
+    },
+    {
+      "username": "akash99",
+      "password": "Akash@99"
+    },
+    {
+      "username": "sabbir10",
+      "password": "Sabbir#10"
+    }
+  ]
+}
