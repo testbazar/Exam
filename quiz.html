@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>পেশাদার কুইজ পরীক্ষা</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        /* LOGIN PAGE */
+        .login-page {
+            padding: 60px 40px;
+            text-align: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .login-page h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .login-page p {
+            font-size: 1.1em;
+            margin-bottom: 40px;
+            opacity: 0.9;
+        }
+
+        .login-form {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+            font-size: 1em;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 1em;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.2);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 0.9em;
+            margin-top: 15px;
+            display: none;
+        }
+
+        /* QUIZ PAGE */
+        .quiz-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .quiz-header h2 {
+            font-size: 1.8em;
+        }
+
+        .timer {
+            font-size: 1.5em;
+            font-weight: bold;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px 20px;
+            border-radius: 5px;
+            min-width: 150px;
+            text-align: center;
+        }
+
+        .timer.danger {
+            background: #e74c3c;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .quiz-content {
+            padding: 40px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .progress-bar {
+            background: #ecf0f1;
+            height: 10px;
+            border-radius: 5px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        .question-container {
+            margin-bottom: 30px;
+        }
+
+        .question-number {
+            color: #667eea;
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+
+        .question-text {
+            font-size: 1.1em;
+            margin-bottom: 15px;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option {
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+        }
+
+        .option input[type="radio"] {
+            margin-right: 10px;
+            cursor: pointer;
+            width: 20px;
+            height: 20px;
+        }
+
+        .option label {
+            cursor: pointer;
+            flex: 1;
+            margin: 0;
+        }
+
+        .option:hover {
+            background: #f8f9fa;
+            border-color: #667eea;
+        }
+
+        .option input[type="radio"]:checked ~ label {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .option input[type="radio"]:checked {
+            accent-color: #667eea;
+        }
+
+        .quiz-footer {
+            padding: 30px 40px;
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-prev {
+            background: #95a5a6;
+            color: white;
+        }
+
+        .btn-prev:hover {
+            background: #7f8c8d;
+        }
+
+        .btn-next {
+            background: #3498db;
+            color: white;
+            margin-left: auto;
+        }
+
+        .btn-next:hover {
+            background: #2980b9;
+        }
+
+        .btn-submit {
+            background: #27ae60;
+            color: white;
+            width: 100%;
+            padding: 15px;
+            font-size: 1.1em;
+        }
+
+        .btn-submit:hover {
+            background: #229954;
+        }
+
+        /* RESULTS PAGE */
+        .results-page {
+            padding: 40px;
+        }
+
+        .results-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .results-header h2 {
+            color: #333;
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        .score-display {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .score-display .score {
+            font-size: 3em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .score-display .percentage {
+            font-size: 1.5em;
+        }
+
+        .review-section {
+            margin-top: 30px;
+        }
+
+        .review-item {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border-left: 5px solid #ddd;
+        }
+
+        .review-item.correct {
+            border-left-color: #27ae60;
+        }
+
+        .review-item.incorrect {
+            border-left-color: #e74c3c;
+        }
+
+        .review-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .review-item-question {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .review-item-answer {
+            margin: 10px 0;
+        }
+
+        .your-answer {
+            color: #3498db;
+        }
+
+        .correct-answer {
+            color: #27ae60;
+        }
+
+        .explanation {
+            background: white;
+            padding: 10px;
+            border-radius: 3px;
+            margin-top: 10px;
+            font-style: italic;
+            border-left: 3px solid #f39c12;
+            color: #555;
+        }
+
+        .status-badge {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+        }
+
+        .status-badge.correct {
+            background: #d5f4e6;
+            color: #27ae60;
+        }
+
+        .status-badge.incorrect {
+            background: #fadbd8;
+            color: #e74c3c;
+        }
+
+        .btn-restart {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 40px;
+            font-size: 1.1em;
+            margin-top: 30px;
+        }
+
+        .btn-restart:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        /* HIDDEN PAGES */
+        .hidden {
+            display: none !important;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .login-page {
+                padding: 40px 20px;
+            }
+
+            .login-form {
+                padding: 25px;
+            }
+
+            .quiz-header {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .quiz-content {
+                padding: 20px;
+            }
+
+            .quiz-footer {
+                flex-direction: column;
+            }
+
+            .btn-next {
+                margin-left: 0;
+            }
+        }
+
+        /* SCROLLBAR STYLING */
+        .quiz-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .quiz-content::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .quiz-content::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 4px;
+        }
+
+        .quiz-content::-webkit-scrollbar-thumb:hover {
+            background: #764ba2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- LOGIN PAGE -->
+        <div id="loginPage" class="login-page">
+            <h1>🎓 কুইজ পরীক্ষা</h1>
+            <p>পেশাদার MCQ পরীক্ষা সিস্টেম</p>
+            
+            <div class="login-form">
+                <div class="form-group">
+                    <label for="username">ব্যবহারকারী নাম</label>
+                    <input type="text" id="username" placeholder="আপনার ব্যবহারকারী নাম প্রবেश করুন">
+                </div>
+                <div class="form-group">
+                    <label for="password">পাসওয়ার্ড</label>
+                    <input type="password" id="password" placeholder="আপনার পাসওয়ার্ড প্রবেश করুন">
+                </div>
+                <button class="login-btn" onclick="handleLogin()">লগইন করুন</button>
+                <div class="error-message" id="errorMessage"></div>
+            </div>
+        </div>
+
+        <!-- QUIZ PAGE -->
+        <div id="quizPage" class="hidden">
+            <div class="quiz-header">
+                <h2>কুইজ পরীক্ষা চলছে</h2>
+                <div class="timer" id="timer">60:00</div>
+            </div>
+
+            <div class="quiz-content">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+
+                <div id="questionContainer"></div>
+            </div>
+
+            <div class="quiz-footer">
+                <button class="btn btn-prev" onclick="previousQuestion()" id="prevBtn">← পূর্ববর্তী</button>
+                <button class="btn btn-next" onclick="nextQuestion()" id="nextBtn">পরবর্তী →</button>
+                <button class="btn btn-submit hidden" onclick="submitQuiz()" id="submitBtn">✓ জমা দিন</button>
+            </div>
+        </div>
+
+        <!-- RESULTS PAGE -->
+        <div id="resultsPage" class="hidden">
+            <div class="results-page">
+                <div class="results-header">
+                    <h2>পরীক্ষা সম্পন্ন!</h2>
+                </div>
+
+                <div class="score-display">
+                    <div class="score" id="finalScore">0/100</div>
+                    <div class="percentage" id="finalPercentage">0%</div>
+                </div>
+
+                <div class="review-section" id="reviewSection"></div>
+
+                <button class="btn btn-restart" onclick="restartQuiz()">পুনরায় শুরু করুন</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="quiz-data.js"></script>
+    <script src="quiz-app.js"></script>
+</body>
+</html>
